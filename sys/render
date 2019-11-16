@@ -1,0 +1,23 @@
+#!/bin/sh
+render(){
+    (
+	STATUS=$1
+	CONTENT_TYPE=$2
+	CONTENT="$(cat -)"
+	
+	
+	# STATUS CODEが変なときは500を返す
+	load_library escape
+	if ! escape_status_code $STATUS; then
+	    STATUS=InternalServerError
+	    CONTENT=""
+	fi    
+	
+	echo "Status: $(cat status/$(basename $STATUS) | tr -d '\r' | tr -d '\n')"
+	echo "Content-Type: $(cat content-type/$CONTENT_TYPE | tr -d '\r' | tr -d '\n'); char-set=UTF-8"
+	echo ""
+	echo "${CONTENT}"
+
+
+    )
+}

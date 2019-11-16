@@ -1,0 +1,6 @@
+content_loader(){
+    (
+	PARAMS=$1
+	cat - | sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/$(echo $PARAMS)/g  
+    )
+}

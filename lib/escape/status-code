@@ -1,0 +1,8 @@
+escape_status_code(){
+    (
+	if [ -e status/$(basename $1) ];then
+	    return 0;
+	fi
+	return 1;
+    )
+}

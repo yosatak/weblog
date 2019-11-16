@@ -1,0 +1,5 @@
+template_loader(){
+    (
+	cat ${MAIN_TEMPLATE} | sed s/\<==\ router\ ==\>/$(cat ${TEMPLATE_DIR}/$(basename $1))/
+    )
+}

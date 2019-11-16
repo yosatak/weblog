@@ -1,0 +1,11 @@
+# Load files under specified directory
+# https://qiita.com/yuba/items/489fadb350246b5c94e7
+# http://www.etalabs.net/sh_tricks.html
+# https://hnw.hatenablog.com/entry/20090125
+load_library(){
+    # -maxdepth is extended find 
+    # TODO： Resolving errors when file names contain spaces
+    for file in $(cd ${LIB_DIR};find $(basename $1)/. -type d '!' -name . -prune -o -type f);do
+	. ${LIB_DIR}/$file
+    done
+}

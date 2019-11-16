@@ -1,0 +1,5 @@
+include_loader(){
+    (
+	cat - | sed s/\<==\ include\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ ==\>/aaa/g
+    )
+}
