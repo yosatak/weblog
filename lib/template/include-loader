@@ -1,5 +1,14 @@
 include_loader(){
     (
-	cat - | sed s/\<==\ include\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ ==\>/aaa/g
+	cat - | while read LINE
+	do
+	    case ${LINE} in
+		\<==\ include\ [!\ ]*\ ==\> )
+		    FILENAME=$(echo "${LINE}" | sed s/\<==\ include\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ ==\>/\\1/g)
+		    cat ${COMPONENT_DIR}/${FILENAME} | include_loader ;;
+		* )
+		    echo "${LINE}" ;;
+	    esac
+	done		    
     )
 }
