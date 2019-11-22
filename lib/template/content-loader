@@ -1,6 +1,14 @@
 content_loader(){
     (
 	PARAMS=$1
-	cat - | sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/$(echo $PARAMS)/g  
+	cat - | while read LINE
+	do
+	    case ${LINE} in
+		*\<==\ content\ [!\ ]*\ ==\>* )
+		    echo ${LINE} |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\\\1/g ;;
+		* )
+		    echo "${LINE}" ;;
+	    esac
+	done		    
     )
 }
