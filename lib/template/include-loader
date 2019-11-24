@@ -3,12 +3,45 @@ include_loader(){
 	cat - | while read LINE
 	do
 	    case ${LINE} in
-		\<==\ include\ [!\ ]*\ ==\> )
+		\<==\ include-for\ [!\ ]*\ [0-9]*\ ==\> )
+		    if [ -n "$INCLUDE_LOOP_COUNT" ] ; then
+			CONTENT_ARRAY_PREFIX=${CONTENT_ARRAY_PREFIX}-${INCLUDE_LOOP_COUNT}		       
+			echo $INCLUDE_LOOP_COUNT
+		    fi
+		    INCLUDE_LOOP_COUNT=0
+		    while [ "${INCLUDE_LOOP_COUNT}" -le $(echo "${LINE}" | sed s/\<==\ include-for\ \[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\\\1/g) ]
+		    do
+			cat ${COMPONENT_DIR}/$(echo "${LINE}" | sed s/\<==\ include-for\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ \[\[\:alnum\:\]\]*\ ==\>/\\\1/g) | extract_content_index | include_loader
+			INCLUDE_LOOP_COUNT=$( expr ${INCLUDE_LOOP_COUNT} + 1)
+		    done
+		    ;;
+		
+		*\<==\ include\ [!\ ]*\ ==\>* )
 		    FILENAME=$(echo "${LINE}" | sed s/\<==\ include\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ ==\>/\\1/g)
 		    cat ${COMPONENT_DIR}/${FILENAME} | include_loader ;;
+		
 		* )
 		    echo "${LINE}" ;;
 	    esac
 	done		    
+    )
+}
+
+extract_content_index(){
+    (
+	cat - | while read LINE
+	do
+	    case ${LINE} in
+		*\<==\ content\ [!\ ]*\ ==\>* )
+		    if [ -n "$CONTENT-ARRAY-PREFIX" ]; then
+			echo "${LINE}" |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\<==\ content\ \\\1-${INCLUDE_LOOP_COUNT}\ ==\>/g 
+		    else
+			echo "${LINE}" |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\<==\ content\ \\\1-${CONTENT_ARRAY_PREFIX}-${INCLUDE_LOOP_COUNT}\ ==\>/g 
+		    fi
+		    ;;
+		* )
+		    echo "${LINE}" ;;
+	    esac
+	done
     )
 }

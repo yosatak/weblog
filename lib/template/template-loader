@@ -7,7 +7,7 @@ template_loader(){
 		    cat ${TEMPLATE_DIR}/$(basename $1)
 		    ;;
 		* )
-		    echo ${LINE}
+		    echo "${LINE}"
 		    ;;
 	    esac
 	done

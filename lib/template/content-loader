@@ -5,7 +5,7 @@ content_loader(){
 	do
 	    case ${LINE} in
 		*\<==\ content\ [!\ ]*\ ==\>* )
-		    echo ${LINE} |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\\\1/g ;;
+		    echo "${LINE}" |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]-\]*\\\)\ ==\>/\\\1/g ;;
 		* )
 		    echo "${LINE}" ;;
 	    esac
