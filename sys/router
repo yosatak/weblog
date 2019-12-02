@@ -1,5 +1,20 @@
 router(){
     (
-	
+	TEMPLATE="error.html"
+	PARAMS=""
+	STATUS_CODE="OK"
+	# $DOCUMENT_URIをparseしてpageスクリプトを実行 $CONTENTと$STAUTS_CODEを設定してもらって、renderにわたす
+	case ${DOCUMENT_URI} in
+	    /${CGI_ROOT}/ )
+		TEMPLATE='articlelist.html'
+		template_loader ${TEMPLATE} | include_loader | content_loader articlelist.sh | render ${STATUS_CODE} HTML
+		;;
+	    /${CGI_ROOT}/article/[0-9]* )
+		PARAM_ARTICLE_ID=$(echo ${DOCUMENT_URI} | sed s/\\\/${CGI_ROOT}\\\/article\\\/\\\([0-9]*\\\)/\\\1/ )
+		TEMPLATE='articledetail.html'
+		template_loader ${TEMPLATE} | include_loader | content_loader articledetail.sh | render ${STATUS_CODE} HTML
+		;;
+	esac
     )
 }
+
