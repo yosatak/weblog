@@ -17,8 +17,8 @@ include_loader(){
 		    ;;
 		
 		*\<==\ include\ [!\ ]*\ ==\>* )
-		    FILENAME=$(echo "${LINE}" | sed s/\<==\ include\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ ==\>/\\1/g)
-		    cat ${COMPONENT_DIR}/${FILENAME} | include_loader ;;
+		    FILENAME=$(echo "${LINE}" | sed s/^\ *\<==\ include\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ ==\>\ *$/\\1/g)
+		    cat ${COMPONENT_DIR}/$(basename ${FILENAME}) | include_loader ;;
 		
 		* )
 		    echo "${LINE}" ;;

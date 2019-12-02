@@ -1,4 +1,5 @@
 #!/bin/sh
+LC_ALL=C
 
 if [ -v $DOCUMENT_URL ];then
     readonly ROOT_DIR=$(pwd)
