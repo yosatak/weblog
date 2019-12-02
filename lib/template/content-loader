@@ -1,14 +1,33 @@
+
+escape_sed(){
+    (
+	cat - | sed s/\\\\/\\\\\\\\/g |\
+	    sed s/\\\//\\\\\\//g |\
+	    sed s/\>/\\\\\>/g |\
+	    sed s/\&/\\\\\&/g |\
+#	    sed -e '$b' -e 's/^\(.*[^\n]\)$/\1/g' -e ':loop' -e 'N' -e '$!b loop' -e 's/\n/\\\
+	    sed -e '$b' -e 's/^\(.*[^\n]\)$/\1/g' -e ':loop' -e 'N' -e '$!b loop' -e 's/\n/\\\
+/g' #?!?!?
+
+    )
+}
+
 content_loader(){
     (
-	PARAMS=$1
+	. ${CONTENT_DIR}/$1
+
 	cat - | while read LINE
 	do
 	    case ${LINE} in
 		*\<==\ content\ [!\ ]*\ ==\>* )
-		    echo "${LINE}" |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]-\]*\\\)\ ==\>/\\\1/g ;;
+		    # TODO wtf code!
+		    VAR=$(echo "${LINE}" | sed s/.*\<==\ content\ \\\(\[\[\:alnum\:\]_\]*\\\)\ ==\>.*/\\\1/g)
+		    IFS= VAR_CONTENT=$(eval echo '$'"${VAR}" | escape_sed ) # ???????????? :thinking_face:
+		    echo "${LINE}" | sed s/\<==\ content\ \\\(\[\[\:alnum\:\]_\]*\\\)\ ==\>/"${VAR_CONTENT}"/g
+		    ;;
 		* )
 		    echo "${LINE}" ;;
 	    esac
-	done		    
+	done
     )
 }
