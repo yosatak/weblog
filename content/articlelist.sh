@@ -8,6 +8,8 @@ articlelist()
 	IFS= eval articledescription_${article_id}="'"${DESCRIPTION}"'"
 	IFS= eval articlelink_${article_id}="'/article/"${article_id}"'" # routerから取れるようにしたい
     done
+    loopcount=${article_id}
+
     STATUS_CODE=OK
 }
 

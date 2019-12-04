@@ -4,18 +4,18 @@ include_loader(){
 	cat - | while read LINE
 	do
 	    case ${LINE} in
-		\<==\ include-for\ [!\ ]*\ [0-9]*\ ==\> )
-		    if [ -n "$INCLUDE_LOOP_COUNT" ] ; then
-			CONTENT_ARRAY_PREFIX=${CONTENT_ARRAY_PREFIX}_${INCLUDE_LOOP_COUNT}		       
-		    fi
-		    INCLUDE_LOOP_COUNT=0
-		    while [ "${INCLUDE_LOOP_COUNT}" -le $(echo "${LINE}" | sed s/\<==\ include-for\ \[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\\\1/g) ]
-		    do
-			cat ${COMPONENT_DIR}/$(echo "${LINE}" | sed s/\<==\ include-for\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ \[\[\:alnum\:\]\]*\ ==\>/\\\1/g) | extract_content_index | include_loader
-			INCLUDE_LOOP_COUNT=$( expr ${INCLUDE_LOOP_COUNT} + 1)
-		    done
+		*\<==\ include-for\ [!\ ]*\ [0-9]*\ ==\>* )
+		    include_for \
+			$(echo "${LINE}" | sed s/\<==\ include-for\ \[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\\\1/g)\
+			$(echo "${LINE}" | sed s/\<==\ include-for\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ \[\[\:alnum\:\]\]*\ ==\>/\\\1/g)
 		    ;;
+
+		*\<==\ include-for\ [!\ ]*\ *\ ==\>* )
+		    INCLUDE_FOR_NUM=""
+		    eval 'INCLUDE_FOR_NUM=''$'$(echo "${LINE}" | sed s/^\ *\<==\ include-for\ \[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\\\1/g)
+		    include_for ${INCLUDE_FOR_NUM} $(echo "${LINE}" | sed s/\<==\ include-for\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ \[\[\:alnum\:\]\]*\ ==\>/\\\1/g)
 		
+;;		
 		*\<==\ include\ [!\ ]*\ ==\>* )
 		    FILENAME=$(echo "${LINE}" | sed s/^\ *\<==\ include\ \\\(\[\[\:alnum\:\]\]*\.\[\[\:alnum\:\]\]*\\\)\ ==\>\ *$/\\1/g)
 		    cat ${COMPONENT_DIR}/$(basename ${FILENAME}) | include_loader ;;
@@ -27,13 +27,27 @@ include_loader(){
     )
 }
 
+include_for(){
+    (
+	if [ -n "$INCLUDE_LOOP_COUNT" ] ; then
+	    CONTENT_ARRAY_PREFIX=${CONTENT_ARRAY_PREFIX}_${INCLUDE_LOOP_COUNT}		       
+	fi
+	INCLUDE_LOOP_COUNT=0
+	while [ "${INCLUDE_LOOP_COUNT}" -le ${1} ]
+	do
+	    cat ${COMPONENT_DIR}/${2} | extract_content_index | include_loader
+	    INCLUDE_LOOP_COUNT=$( expr ${INCLUDE_LOOP_COUNT} + 1)
+	done
+    )
+}
+
 extract_content_index(){
     (
 	cat - | while read LINE
 	do
 	    case ${LINE} in
 		*\<==\ content\ [!\ ]*\ ==\>* )
-		    if [ -n "$CONTENT-ARRAY-PREFIX" ]; then
+		    if [ -z "$CONTENT_ARRAY_PREFIX" ]; then
 			echo "${LINE}" |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\<==\ content\ \\\1_${INCLUDE_LOOP_COUNT}\ ==\>/g 
 		    else
 			echo "${LINE}" |sed s/\<==\ content\ \\\(\[\[\:alnum\:\]\]*\\\)\ ==\>/\<==\ content\ \\\1_${CONTENT_ARRAY_PREFIX}_${INCLUDE_LOOP_COUNT}\ ==\>/g 

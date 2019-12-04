@@ -4,17 +4,23 @@ router(){
 	# $DOCUMENT_URIをparseしてpageスクリプトを実行 $CONTENTと$STAUTS_CODEを設定してもらって、renderにわたす
 	case ${DOCUMENT_URI} in
 	    /${CGI_ROOT}/ )
-		
 		TEMPLATE='articlelist.html'
 		. ${CONTENT_DIR}/articlelist.sh
 		;;
+	    
 	    /${CGI_ROOT}/article/[0-9]* )
-		
-	        article_id=$(echo ${DOCUMENT_URI} | sed s/\\\/${CGI_ROOT}\\\/article\\\/\\\([0-9]*\\\)/\\\1/ )
+		article_id=$(echo ${DOCUMENT_URI} | sed s/\\\/${CGI_ROOT}\\\/article\\\/\\\([0-9]*\\\)/\\\1/ )
 		
 		TEMPLATE='articledetail.html'
 		. ${CONTENT_DIR}/articledetail.sh
 		;;
+	    
+	    /${CGI_ROOT}/tag/* )
+		tag_id=$(echo ${DOCUMENT_URI} | sed s/\\\/${CGI_ROOT}\\\/tag\\\/\\\([a-zA-Z]*\\\)/\\\1/ )
+		TEMPLATE='tagdetail.html'
+		. ${CONTENT_DIR}/tag.sh
+		;;
+
 	esac
         render HTML
     )
