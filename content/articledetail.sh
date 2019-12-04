@@ -34,7 +34,7 @@ article_detail(){
     
     . ${ARTICLE_CONTENT_DIR}/${article_id}/meta
     
-    article=$(cat ${ARTICLE_CONTENT_DIR}/${article_id}/*.html)
+    article="$(cat ${ARTICLE_CONTENT_DIR}/${article_id}/*.html)"
 }
 
 article_detail
