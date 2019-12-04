@@ -17,6 +17,8 @@ render(){
 
 	if [ $STATUS_CODE = "OK" ]; then
 	    template_loader ${TEMPLATE} | include_loader | content_loader
+	elif [ ${STATUS_CODE} = "NotFound" ]; then
+	    echo "NotFound!"
 	fi
 
     )
