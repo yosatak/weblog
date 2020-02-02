@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Load files under specified directory
 # https://qiita.com/yuba/items/489fadb350246b5c94e7
 # http://www.etalabs.net/sh_tricks.html

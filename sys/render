@@ -1,4 +1,5 @@
 #!/bin/sh
+
 render(){
     (
 	CONTENT_TYPE=$1

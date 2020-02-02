@@ -1,3 +1,5 @@
+#!/bin/sh
+
 template_loader(){
     (
 	cat "${MAIN_TEMPLATE}" | while read LINE

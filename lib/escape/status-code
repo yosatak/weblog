@@ -1,3 +1,5 @@
+#!/bin/sh
+
 escape_status_code(){
     (
 	if [ -e status/$(basename $1) ];then
