@@ -15,7 +15,7 @@ for file in $(find ${ARTICLE_CONTENT_DIR}/[0-9]*/${tag_id} -type d '!' -name . -
     IFS= eval articletitle_${article_id}="'"${TITLE}"'"
     IFS= eval articledescription_${article_id}="'"${DESCRIPTION}"'"
     IFS= eval articlelink_${article_id}="'/article/"${article_id}"'" # routerから取れるようにしたい
-    tagcount=$( expr ${tagcount} + 1 )
+    tagcount=$(( tagcount + 1 ))
 done
 
 if [ ${tagcount} = '-1' ] ;then
@@ -23,5 +23,5 @@ if [ ${tagcount} = '-1' ] ;then
 fi
 
 
-pagetitle=${TITLE}'の記事一覧|無停止デプロイ'
+pagetitle=${tag_id}'の記事一覧'
 
