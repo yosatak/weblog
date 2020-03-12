@@ -4,19 +4,18 @@ render(){
     (
 	CONTENT_TYPE=$1
 
-	
 	# STATUS CODEが変なときは500を返す
 	load_library escape
 	if ! escape_status_code "${STATUS_CODE}"; then
 	    STATUS_CODE=InternalServerError
  	fi    
-	
-        printf "%s\\n" "Status: ( tr -d '\\r' | tr -d '\\n')<status/$(basename ${STATUS_CODE})"
+
+        printf "%s\\n" "Status: $(cat ${STATUS_DIR}/$(basename ${STATUS_CODE})| tr -d '\\r' | tr -d '\\n')"
 	echo "Content-Type: $(cat content-type/$CONTENT_TYPE | tr -d '\\r' | tr -d '\\n'); char-set=UTF-8"
 	[ -n "${LAST_MODIFIED}" ] && echo "Last-Modified: ${LAST_MODIFIED}"
 	echo ""
 
-	if [ $STATUS_CODE = "OK" ]; then
+	if [ ${STATUS_CODE} = "OK" ]; then
 	    template_loader "${TEMPLATE}" | include_loader | content_loader
 	elif [ ${STATUS_CODE} = "NotFound" ]; then
 	    echo "NotFound!"

@@ -10,6 +10,7 @@ fi
 readonly LIB_DIR=${ROOT_DIR}/lib
 readonly SYS_DIR=${ROOT_DIR}/sys
 readonly TEMPLATE_DIR=${ROOT_DIR}/template
+readonly STATUS_DIR=${ROOT_DIR}/status
 readonly COMPONENT_DIR=${ROOT_DIR}/component
 readonly CONTENT_DIR=${ROOT_DIR}/content
 readonly ARTICLE_CONTENT_DIR=${CONTENT_DIR}/article
