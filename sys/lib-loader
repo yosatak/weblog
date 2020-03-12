@@ -7,7 +7,7 @@
 load_library(){
     # -maxdepth is extended find 
     # TODO： Resolving errors when file names contain spaces
-    for file in $(cd ${LIB_DIR};find $(basename $1)/. -type d '!' -name . -prune -o -type f);do
-	. ${LIB_DIR}/$file
+    for file in $(cd "${LIB_DIR}" || exit;find "$(basename "${1}")"/. -type d '!' -name . -prune -o -type f);do
+	. "${LIB_DIR}"/"${file}"
     done
 }
