@@ -1,7 +1,7 @@
 #!/bin/sh
 LC_ALL=C
 
-if [ -v "${DOCUMENT_URL}" ];then
+if [ -n "${DOCUMENT_URL}" ];then
     readonly ROOT_DIR=$(pwd)
 else
     readonly ROOT_DIR=/htdocs/weblog
