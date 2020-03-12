@@ -38,5 +38,5 @@ if [ "${HTTP_IF_MODIFIED_SINCE}" = "${LAST_MODIFIED}" ]; then
 fi
 
 
-article="$(cat ${ARTICLE_CONTENT_DIR}/${article_id}/*.html)""${HTTP_IF_MODIFIED_SINCE}""<br>""${LAST_MODIFIED}<br>hoge"
+article="$(cat ${ARTICLE_CONTENT_DIR}/${article_id}/*.html)"
 
